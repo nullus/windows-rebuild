@@ -18,6 +18,14 @@ Windows 10
 * Brave (+Firefox?)
 * Unity
 * Steam
+* Windows 10
+  * Backup process?
+
+### Prerequisites
+
+1. Backup anything required from existing system:
+  * Skyrim saves
+  *  
 
 ### Process
 
