@@ -1,0 +1,22 @@
+winget install -h --id Microsoft.WindowsTerminal
+winget install -h --id Microsoft.PowerShell
+winget install -h --id Git.Git
+winget install -h --id Canonical.Ubuntu
+winget install -h --id BraveSoftware.BraveBrowser
+winget install -h --id UnityTechnologies.UnityHub
+winget install -h --id Valve.Steam
+winget install -h --id JetBrains.Toolbox
+winget install -h --id Microsoft.VisualStudioCode
+winget install -h --id LogMeIn.LastPass
+winget install -h --id SlackTechnologies.Slack
+winget install -h --id Discord.Discord
+winget install -h --id AdoptOpenJDK.OpenJDK
+winget install -h --id sbt.sbt
+winget install -h --id Microsoft.PowerToys
+winget install -h --id Docker.DockerDesktop
+winget install -h --id Python.Python
+winget install -h --id VideoLAN.VLC
+winget install -h --id Signal.Signal
+winget install -h --id Insecure.Nmap
+# Requires NPcap install by Nmap
+winget install -h --id WiresharkFoundation.Wireshark
