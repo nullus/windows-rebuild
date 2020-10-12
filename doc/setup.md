@@ -1,5 +1,24 @@
 # Setup instructions
 
+## Broken license fix
+
+Upgrading from Legacy BIOS/MBR to UEFI/GPT requires a conversion step to boot. A clean install borked the license. Microsoft support was as useful as a one legged man at an arse kicking party...
+
+* Clean install on original hardware
+* Swap MB/CPU
+* Boot Windows 10 install USB, recovery, command prompt
+* Run the following:
+    
+    mbr2gpt /validate /disk:0
+    mbr2gpt /convert /disk:0
+
+* Boot 🤞
+* In Settings → Update & Security → Activation, run Troubleshoot
+* Select option "I upgraded hardware"
+* Choose old system and 
+
+## Actual setup...
+
 Ensure Windows Insider updates are configured
 
 winget is included with preview of App Installer
