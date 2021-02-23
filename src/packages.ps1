@@ -20,3 +20,4 @@ winget install -h --id Signal.Signal
 winget install -h --id Insecure.Nmap
 # Requires NPcap install by Nmap
 winget install -h --id WiresharkFoundation.Wireshark
+winget install -h --id Microsoft.VisualStudio.Community
