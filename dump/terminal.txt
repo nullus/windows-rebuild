@@ -1,0 +1,622 @@
+--
+
+
+Microsoft DiskPart version 10.0.19041.610
+
+Copyright (C) Microsoft Corporation.
+On computer: KOHR-AH
+
+DISKPART> list disk
+
+  Disk ###  Status         Size     Free     Dyn  Gpt
+  --------  -------------  -------  -------  ---  ---
+  Disk 0    Online          223 GB      0 B        *
+  Disk 1    Online          931 GB      0 B        *
+  Disk 2    Online          465 GB   465 GB        *
+
+
+^ Been doctored to match approx what it should've looked like
+--
+
+Disk 2 is now the selected disk.
+
+DISKPART> create partition efi size=260
+
+DiskPart succeeded in creating the specified partition.
+
+DISKPART> format quick fs=fat32 label="System"
+
+  100 percent completed
+
+DiskPart successfully formatted the volume.
+
+DISKPART> assign letter="S"
+
+DiskPart successfully assigned the drive letter or mount point.
+
+DISKPART> create partition msr size=16
+
+DiskPart succeeded in creating the specified partition.
+
+DISKPART> create partition primary
+
+DiskPart succeeded in creating the specified partition.
+
+DISKPART> shrink minimum=650
+
+DiskPart successfully shrunk the volume by:  650 MB
+
+DISKPART> format quick fs=ntfs label="Windows"
+
+  100 percent completed
+
+DiskPart successfully formatted the volume.
+
+DISKPART> assign letter="W"
+
+DiskPart successfully assigned the drive letter or mount point.
+
+DISKPART> create partition primary
+
+DiskPart succeeded in creating the specified partition.
+
+DISKPART> format quick fs=ntfs label="Recovery tools"
+
+  100 percent completed
+
+DiskPart successfully formatted the volume.
+
+DISKPART> assign letter="R"
+
+DiskPart successfully assigned the drive letter or mount point.
+
+DISKPART> set id="de94bba4-06d1-4d40-a16a-bfd50179d6ac"
+
+DiskPart successfully set the partition ID.
+
+DISKPART> gpt attributes=0x8000000000000001
+
+DiskPart successfully assigned the attributes to the selected GPT partition.
+
+DISKPART> list volume
+
+  Volume ###  Ltr  Label        Fs     Type        Size     Status     Info
+  ----------  ---  -----------  -----  ----------  -------  ---------  --------
+  Volume 0     C   System Rese  NTFS   Partition     50 MB  Healthy
+  Volume 1     D                NTFS   Partition    222 GB  Healthy
+  Volume 2     F                NTFS   Partition    505 MB  Healthy
+  Volume 3                      FAT32  Partition    100 MB  Healthy    Hidden
+  Volume 4     E   data         NTFS   Partition    931 GB  Healthy
+  Volume 5     W   Windows      NTFS   Partition    464 GB  Healthy
+  Volume 6     R   Recovery to  NTFS   Partition    650 MB  Healthy
+  Volume 7     S   SYSTEM       FAT32  Partition    260 MB  Healthy    Hidden
+
+DISKPART> exit
+
+Leaving DiskPart...
+
+X:\windows\system32>dir W:
+ Volume in drive W is Windows
+ Volume Serial Number is 7614-CB38
+
+ Directory of W:\
+
+File Not Found
+
+X:\windows\system32>dir R:
+ Volume in drive R is Recovery tools
+ Volume Serial Number is 7E2C-00C9
+
+ Directory of R:\
+
+File Not Found
+
+X:\windows\system32>dism /?
+
+Deployment Image Servicing and Management tool
+Version: 10.0.19041.1
+
+
+DISM.exe [dism_options] {Imaging_command} [<Imaging_arguments>]
+DISM.exe {/Image:<path_to_offline_image> | /Online} [dism_options]
+         {servicing_command} [<servicing_arguments>]
+
+DESCRIPTION:
+
+  DISM enumerates, installs, uninstalls, configures, and updates features
+  and packages in Windows images. The commands that are available depend
+  on the image being serviced and whether the image is offline or running.
+
+
+GENERIC IMAGING COMMANDS:
+
+  /Split-Image            - Splits an existing .wim file into multiple
+                            read-only split WIM (SWM) files.
+  /Apply-Image            - Applies an image.
+  /Get-MountedImageInfo   - Displays information about mounted WIM and VHD
+                            images.
+  /Get-ImageInfo          - Displays information about images in a WIM, a VHD
+                            or a FFU file.
+  /Commit-Image           - Saves changes to a mounted WIM or VHD image.
+  /Unmount-Image          - Unmounts a mounted WIM or VHD image.
+  /Mount-Image            - Mounts an image from a WIM or VHD file.
+  /Remount-Image          - Recovers an orphaned image mount directory.
+  /Cleanup-Mountpoints    - Deletes resources associated with corrupted
+                            mounted images.
+
+WIM COMMANDS:
+
+  /Apply-CustomDataImage  - Dehydrates files contained in the custom data image.
+  /Capture-CustomImage    - Captures customizations into a delta WIM file on a
+                            WIMBoot system. Captured directories include all
+                            subfolders and data.
+  /Get-WIMBootEntry       - Displays WIMBoot configuration entries for the
+                            specified disk volume.
+  /Update-WIMBootEntry    - Updates WIMBoot configuration entry for the
+                            specified disk volume.
+  /List-Image             - Displays a list of the files and folders in a
+                            specified image.
+  /Delete-Image           - Deletes the specified volume image from a WIM file
+                            that has multiple volume images.
+  /Export-Image           - Exports a copy of the specified image to another
+                            file.
+  /Append-Image           - Adds another image to a WIM file.
+  /Capture-Image          - Captures an image of a drive into a new WIM file.
+                            Captured directories include all subfolders and
+                            data.
+  /Get-MountedWimInfo     - Displays information about mounted WIM images.
+  /Get-WimInfo            - Displays information about images in a WIM file.
+  /Commit-Wim             - Saves changes to a mounted WIM image.
+  /Unmount-Wim            - Unmounts a mounted WIM image.
+  /Mount-Wim              - Mounts an image from a WIM file.
+  /Remount-Wim            - Recovers an orphaned WIM mount directory.
+  /Cleanup-Wim            - Deletes resources associated with mounted WIM
+                            images that are corrupted.
+
+FFU COMMANDS:
+
+  /Capture-Ffu            - Captures a physical disk image into a new FFU file.
+  /Apply-Ffu              - Applies an .ffu image.
+  /Split-Ffu              - Splits an existing .ffu file into multiple read-only
+                            split FFU files.
+  /Optimize-Ffu           - Optimizes a FFU file so that it can be applied to storage
+                            of a different size.
+
+IMAGE SPECIFICATIONS:
+
+  /Online                 - Targets the running operating system.
+  /Image                  - Specifies the path to the root directory of an
+                            offline Windows image.
+
+DISM OPTIONS:
+
+  /English                - Displays command line output in English.
+  /Format                 - Specifies the report output format.
+  /WinDir                 - Specifies the path to the Windows directory.
+  /SysDriveDir            - Specifies the path to the system-loader file named
+                            BootMgr.
+  /LogPath                - Specifies the logfile path.
+  /LogLevel               - Specifies the output level shown in the log (1-4).
+  /NoRestart              - Suppresses automatic reboots and reboot prompts.
+  /Quiet                  - Suppresses all output except for error messages.
+  /ScratchDir             - Specifies the path to a scratch directory.
+
+For more information about these DISM options and their arguments, specify an
+option immediately before /?.
+
+  Examples:
+    DISM.exe /Mount-Wim /?
+    DISM.exe /ScratchDir /?
+    DISM.exe /Image:C:\test\offline /?
+    DISM.exe /Online /?
+
+
+
+X:\windows\system32>diskpart
+
+Microsoft DiskPart version 10.0.19041.1
+
+Copyright (C) Microsoft Corporation.
+On computer: MININT-IGF6SH7
+
+DISKPART> list volumes
+
+Microsoft DiskPart version 10.0.19041.1
+
+DISK        - Display a list of disks. For example, LIST DISK.
+PARTITION   - Display a list of partitions on the selected disk.
+              For example, LIST PARTITION.
+VOLUME      - Display a list of volumes. For example, LIST VOLUME.
+VDISK       - Displays a list of virtual disks.
+
+DISKPART> list volume
+
+  Volume ###  Ltr  Label        Fs     Type        Size     Status     Info
+  ----------  ---  -----------  -----  ----------  -------  ---------  --------
+  Volume 0     C   System Rese  NTFS   Partition     50 MB  Healthy
+  Volume 1     D                NTFS   Partition    222 GB  Healthy
+  Volume 2     F                NTFS   Partition    505 MB  Healthy
+  Volume 3                      FAT32  Partition    100 MB  Healthy    Hidden
+  Volume 4     E   data         NTFS   Partition    931 GB  Healthy
+  Volume 5     W   Windows      NTFS   Partition    464 GB  Healthy
+  Volume 6     R   Recovery to  NTFS   Partition    650 MB  Healthy
+  Volume 7     S   SYSTEM       FAT32  Partition    260 MB  Healthy    Hidden
+
+DISKPART> exit
+
+Leaving DiskPart...
+
+X:\windows\system32>dir E:
+ Volume in drive E is data
+ Volume Serial Number is 76DB-B94D
+
+ Directory of E:\
+
+06/22/2016  04:08 AM    <DIR>          Backup
+03/08/2015  06:33 PM    <DIR>          broadcasthe.net
+10/11/2020  04:25 PM    <DIR>          DylanBackup
+10/12/2020  01:36 PM    <DIR>          DylanBackup2
+02/18/2021  11:29 PM    <DIR>          FileHistory
+04/26/2014  09:19 PM    <DIR>          Fraps
+03/15/2016  03:13 AM    <DIR>          Hyper-V
+09/07/2020  11:02 PM        19,445,016 MediaCreationTool2004.exe
+01/10/2018  03:31 PM    <DIR>          Plex Library
+04/07/2017  08:02 PM    <DIR>          Private
+03/08/2014  11:04 PM    <DIR>          Steam
+10/12/2020  06:16 PM    <DIR>          tmp
+05/16/2020  04:30 AM    <DIR>          Users
+05/16/2020  10:26 PM    <DIR>          Windows.old
+               1 File(s)     19,445,016 bytes
+              13 Dir(s)  339,654,176,768 bytes free
+
+X:\windows\system32>dir E:\tmp
+ Volume in drive E is data
+ Volume Serial Number is 76DB-B94D
+
+ Directory of E:\tmp
+
+10/12/2020  06:16 PM    <DIR>          .
+10/12/2020  06:16 PM    <DIR>          ..
+05/01/2017  03:09 AM    <DIR>          testalsofucked2
+05/01/2017  03:09 AM    <DIR>          testfucked2
+               0 File(s)              0 bytes
+               4 Dir(s)  339,654,176,768 bytes free
+
+X:\windows\system32>mkdir E:\Images
+
+X:\windows\system32>dir E:\Images
+ Volume in drive E is data
+ Volume Serial Number is 76DB-B94D
+
+ Directory of E:\Images
+
+02/22/2021  04:23 PM    <DIR>          .
+02/22/2021  04:23 PM    <DIR>          ..
+               0 File(s)              0 bytes
+               2 Dir(s)  339,654,176,768 bytes free
+
+X:\windows\system32>dism /capture-image /imagefile:"E:\Images\Kohr-Ah.wim" /capturedir:D:\ /Name:Kohr-Ah
+
+Deployment Image Servicing and Management tool
+Version: 10.0.19041.1
+
+Saving image
+[==========================100.0%==========================]
+The operation completed successfully.
+
+X:\windows\system32>dir E:\Images
+ Volume in drive E is data
+ Volume Serial Number is 76DB-B94D
+
+ Directory of E:\Images
+
+02/22/2021  04:23 PM    <DIR>          .
+02/22/2021  04:23 PM    <DIR>          ..
+02/22/2021  04:52 PM   106,091,528,008 Kohr-Ah.wim
+               1 File(s) 106,091,528,008 bytes
+               2 Dir(s)  233,562,648,576 bytes free
+
+----
+some stuff missing... but unimportant
+
+  /Cleanup-Mountpoints    - Deletes resources associated with corrupted
+                            mounted images.
+
+WIM COMMANDS:
+
+  /Apply-CustomDataImage  - Dehydrates files contained in the custom data image.
+  /Capture-CustomImage    - Captures customizations into a delta WIM file on a
+                            WIMBoot system. Captured directories include all
+                            subfolders and data.
+  /Get-WIMBootEntry       - Displays WIMBoot configuration entries for the
+                            specified disk volume.
+  /Update-WIMBootEntry    - Updates WIMBoot configuration entry for the
+                            specified disk volume.
+  /List-Image             - Displays a list of the files and folders in a
+                            specified image.
+  /Delete-Image           - Deletes the specified volume image from a WIM file
+                            that has multiple volume images.
+  /Export-Image           - Exports a copy of the specified image to another
+                            file.
+  /Append-Image           - Adds another image to a WIM file.
+  /Capture-Image          - Captures an image of a drive into a new WIM file.
+                            Captured directories include all subfolders and
+                            data.
+  /Get-MountedWimInfo     - Displays information about mounted WIM images.
+  /Get-WimInfo            - Displays information about images in a WIM file.
+  /Commit-Wim             - Saves changes to a mounted WIM image.
+  /Unmount-Wim            - Unmounts a mounted WIM image.
+  /Mount-Wim              - Mounts an image from a WIM file.
+  /Remount-Wim            - Recovers an orphaned WIM mount directory.
+  /Cleanup-Wim            - Deletes resources associated with mounted WIM
+                            images that are corrupted.
+
+FFU COMMANDS:
+
+  /Capture-Ffu            - Captures a physical disk image into a new FFU file.
+  /Apply-Ffu              - Applies an .ffu image.
+  /Split-Ffu              - Splits an existing .ffu file into multiple read-only
+                            split FFU files.
+  /Optimize-Ffu           - Optimizes a FFU file so that it can be applied to storage
+                            of a different size.
+
+IMAGE SPECIFICATIONS:
+
+  /Online                 - Targets the running operating system.
+  /Image                  - Specifies the path to the root directory of an
+                            offline Windows image.
+
+DISM OPTIONS:
+
+  /English                - Displays command line output in English.
+  /Format                 - Specifies the report output format.
+  /WinDir                 - Specifies the path to the Windows directory.
+  /SysDriveDir            - Specifies the path to the system-loader file named
+                            BootMgr.
+  /LogPath                - Specifies the logfile path.
+  /LogLevel               - Specifies the output level shown in the log (1-4).
+  /NoRestart              - Suppresses automatic reboots and reboot prompts.
+  /Quiet                  - Suppresses all output except for error messages.
+  /ScratchDir             - Specifies the path to a scratch directory.
+
+For more information about these DISM options and their arguments, specify an
+option immediately before /?.
+
+  Examples:
+    DISM.exe /Mount-Wim /?
+    DISM.exe /ScratchDir /?
+    DISM.exe /Image:C:\test\offline /?
+    DISM.exe /Online /?
+
+
+
+X:\windows\system32>dism /apply-image /imagefile:"E:\Images\Kohr-Ah.wim" /ApplyDir:W:\ /name:Kohr-Ah
+
+Deployment Image Servicing and Management tool
+Version: 10.0.19041.1
+
+Applying image
+[==========================100.0%==========================]
+The operation completed successfully.
+
+X:\windows\system32>dir W:\
+ Volume in drive W is Windows
+ Volume Serial Number is 7614-CB38
+
+ Directory of W:\
+
+12/07/2020  08:28 PM    <DIR>          AMD
+12/07/2019  01:14 AM    <DIR>          PerfLogs
+02/18/2021  10:45 PM    <DIR>          Program Files
+12/16/2020  10:02 PM    <DIR>          Program Files (x86)
+10/12/2020  06:05 AM    <DIR>          Users
+02/15/2021  09:19 PM    <DIR>          Windows
+               0 File(s)              0 bytes
+               6 Dir(s)  341,876,269,056 bytes free
+
+X:\windows\system32>dir D:\
+ Volume in drive D has no label.
+ Volume Serial Number is BC08-6F2B
+
+ Directory of D:\
+
+12/07/2020  08:28 PM    <DIR>          AMD
+12/07/2019  01:14 AM    <DIR>          PerfLogs
+02/18/2021  10:45 PM    <DIR>          Program Files
+12/16/2020  10:02 PM    <DIR>          Program Files (x86)
+10/12/2020  06:05 AM    <DIR>          Users
+02/15/2021  09:19 PM    <DIR>          Windows
+               0 File(s)              0 bytes
+               6 Dir(s)  55,491,289,088 bytes free
+
+X:\windows\system32>bcdedit
+
+Windows Boot Manager
+--------------------
+identifier              {bootmgr}
+device                  partition=\Device\HarddiskVolume3
+path                    \EFI\MICROSOFT\BOOT\BOOTMGFW.EFI
+description             Windows Boot Manager
+locale                  en-US
+inherit                 {globalsettings}
+default                 {default}
+resumeobject            {17d560b2-0d39-11eb-ad0d-f505190b3627}
+displayorder            {default}
+toolsdisplayorder       {memdiag}
+timeout                 30
+
+Windows Boot Loader
+-------------------
+identifier              {default}
+device                  partition=D:
+path                    \WINDOWS\system32\winload.efi
+description             Windows 10
+locale                  en-US
+inherit                 {bootloadersettings}
+recoverysequence        {current}
+displaymessageoverride  CommandPrompt
+recoveryenabled         Yes
+isolatedcontext         Yes
+allowedinmemorysettings 0x15000075
+osdevice                partition=D:
+systemroot              \WINDOWS
+resumeobject            {17d560b2-0d39-11eb-ad0d-f505190b3627}
+nx                      OptIn
+bootmenupolicy          Standard
+hypervisorlaunchtype    Auto
+
+X:\windows\system32>bcdboot W:\Windows /s S:
+Boot files successfully created.
+
+X:\windows\system32>dir S:
+ Volume in drive S is SYSTEM
+ Volume Serial Number is A8E6-BA0D
+
+ Directory of S:\
+
+02/22/2021  05:24 PM    <DIR>          EFI
+               0 File(s)              0 bytes
+               1 Dir(s)     240,435,200 bytes free
+
+X:\windows\system32>md R:\Recovery\WindowsRE
+
+X:\windows\system32>diskpart
+
+Microsoft DiskPart version 10.0.19041.1
+
+Copyright (C) Microsoft Corporation.
+On computer: MININT-IGF6SH7
+
+DISKPART> list volume
+
+  Volume ###  Ltr  Label        Fs     Type        Size     Status     Info
+  ----------  ---  -----------  -----  ----------  -------  ---------  --------
+  Volume 0     C   System Rese  NTFS   Partition     50 MB  Healthy
+  Volume 1     D                NTFS   Partition    222 GB  Healthy
+  Volume 2     F                NTFS   Partition    505 MB  Healthy
+  Volume 3                      FAT32  Partition    100 MB  Healthy    Hidden
+  Volume 4     E   data         NTFS   Partition    931 GB  Healthy
+  Volume 5     W   Windows      NTFS   Partition    464 GB  Healthy
+  Volume 6     R   Recovery to  NTFS   Partition    650 MB  Healthy
+  Volume 7     S   SYSTEM       FAT32  Partition    260 MB  Healthy    Hidden
+
+DISKPART> exit
+
+Leaving DiskPart...
+
+X:\windows\system32>dir F:
+ Volume in drive F has no label.
+ Volume Serial Number is 6668-5D43
+
+ Directory of F:\
+
+02/22/2021  03:55 PM                 0 Recovery.txt
+               1 File(s)              0 bytes
+               0 Dir(s)      88,412,160 bytes free
+
+X:\windows\system32>dir R:
+ Volume in drive R is Recovery tools
+ Volume Serial Number is 7E2C-00C9
+
+ Directory of R:\
+
+02/22/2021  05:24 PM    <DIR>          Recovery
+               0 File(s)              0 bytes
+               1 Dir(s)     666,763,264 bytes free
+
+X:\windows\system32>bcdedit
+
+Windows Boot Manager
+--------------------
+identifier              {bootmgr}
+device                  partition=\Device\HarddiskVolume3
+path                    \EFI\MICROSOFT\BOOT\BOOTMGFW.EFI
+description             Windows Boot Manager
+locale                  en-US
+inherit                 {globalsettings}
+default                 {default}
+resumeobject            {17d560b2-0d39-11eb-ad0d-f505190b3627}
+displayorder            {default}
+toolsdisplayorder       {memdiag}
+timeout                 30
+
+Windows Boot Loader
+-------------------
+identifier              {default}
+device                  partition=D:
+path                    \WINDOWS\system32\winload.efi
+description             Windows 10
+locale                  en-US
+inherit                 {bootloadersettings}
+recoverysequence        {current}
+displaymessageoverride  CommandPrompt
+recoveryenabled         Yes
+isolatedcontext         Yes
+allowedinmemorysettings 0x15000075
+osdevice                partition=D:
+systemroot              \WINDOWS
+resumeobject            {17d560b2-0d39-11eb-ad0d-f505190b3627}
+nx                      OptIn
+bootmenupolicy          Standard
+hypervisorlaunchtype    Auto
+
+X:\windows\system32>bcdboot /?
+
+Bcdboot - Bcd boot file creation and repair tool.
+
+The bcdboot.exe command-line tool is used to copy critical boot files to the
+system partition and to create a new system BCD store.
+
+bcdboot <source> [/l <locale>] [/s <volume-letter> [/f <firmware>]] [/v]
+                 [/vbcd] [/m [{OS Loader ID}]] [/addlast] [/p] [/c]
+
+  source     Specifies the location of the windows system root.
+
+  /l         Specifies an optional locale parameter to use when
+             initializing the BCD store. The default is US English.
+
+  /s         Specifies an optional volume letter parameter to designate
+             the target system partition where boot environment files are
+             copied.  The default is the system partition identified by
+             the firmware.
+
+  /v         Enables verbose mode.
+
+  /vbcd      Enables BCD logging.
+
+  /m         If an OS loader GUID is provided, this option merges the
+             given loader object with the system template to produce a
+             bootable entry. Otherwise, only global objects are merged.
+
+  /d         Specifies that the existing default windows boot entry
+             should be preserved.
+
+  /f         Used with the /s command, specifies the firmware type of the
+             target system partition. Options for <firmware> are 'UEFI',
+             'BIOS', or 'ALL'.
+
+  /addlast   Specifies that the windows boot manager firmware entry
+             should be added last. The default behavior is to add it
+             first.
+
+  /bcdclean  Clean the BCD Store. By default, simply removes any duplicate
+             entries in the BCD. Can be followed by 'full'. In this case,
+             each entry is scanned. If the corresponding device for that entry
+             does not exist, the entry is deleted.
+
+  /p         Specifies that the windows boot manager firmware entry
+             position should be preserved. If entry does not exist,
+             new entry will be added in the first position.
+
+  /c         Specifies that any existing objects described by the template
+             should not be migrated.
+
+Examples: bcdboot c:\windows /l en-us
+          bcdboot c:\windows /s h:
+          bcdboot c:\windows /s h: /f UEFI
+          bcdboot c:\windows /m {d58d10c6-df53-11dc-878f-00064f4f4e08}
+          bcdboot c:\windows /d /addlast
+          bcdboot c:\windows /p
+
+X:\windows\system32>
+---
